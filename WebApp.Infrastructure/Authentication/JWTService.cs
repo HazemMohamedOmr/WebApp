@@ -1,33 +1,30 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using WebApp.Core.Models;
 using WebApp.Infrastructure.Helpers;
 
-namespace WebApp.Infrastructure.Authentication
+namespace WebApp.Infrastructure.Authentication;
+
+public class JWTService : IJWTService
 {
-    public class JWTService : IJWTService
+    private readonly JWT _jwt;
+
+    public JWTService(IOptions<JWT> jwt)
     {
-        private readonly JWT _jwt;
-        public JWTService(IOptions<JWT> jwt)
-        {
-            _jwt = jwt.Value;
-        }
-        public JwtSecurityToken GenerateToken(ApplicationUser user, IList<string> roles, IList<Claim> userClaims)
-        {
-            var roleClaims = new List<Claim>();
+        _jwt = jwt.Value;
+    }
 
-            foreach (var role in roles)
-                roleClaims.Add(new Claim("roles", role));
+    public JwtSecurityToken GenerateToken(ApplicationUser user, IList<string> roles, IList<Claim> userClaims)
+    {
+        var roleClaims = new List<Claim>();
 
-            var claims = new[]
+        foreach (var role in roles)
+            roleClaims.Add(new Claim("roles", role));
+
+        var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -37,17 +34,16 @@ namespace WebApp.Infrastructure.Authentication
             .Union(userClaims)
             .Union(roleClaims);
 
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
-            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
+        var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
-            var jwtSecurityToken = new JwtSecurityToken(
-                issuer: _jwt.Issuer,
-                audience: _jwt.Audience,
-                claims: claims,
-                expires: DateTime.Now.AddDays(_jwt.DurationInMinutes),
-                signingCredentials: signingCredentials);
+        var jwtSecurityToken = new JwtSecurityToken(
+            _jwt.Issuer,
+            _jwt.Audience,
+            claims,
+            expires: DateTime.Now.AddDays(_jwt.DurationInMinutes),
+            signingCredentials: signingCredentials);
 
-            return jwtSecurityToken;
-        }
+        return jwtSecurityToken;
     }
 }

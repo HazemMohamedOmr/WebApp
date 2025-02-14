@@ -1,6 +1,5 @@
-﻿namespace WebApp.Service
+﻿namespace WebApp.Service;
+
+internal class ProductService
 {
-    internal class ProductService
-    {
-    }
 }

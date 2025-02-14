@@ -1,10 +1,9 @@
-﻿namespace WebApp.Core.Interfaces
+﻿namespace WebApp.Core.Interfaces;
+
+public interface IBaseEntity<T>
 {
-    public interface IBaseEntity<T>
-    {
-        T Id { get; set; }
-        DateTime CreatedAt { get; set; }
-        DateTime? UpdatedAt { get; set; }
-        bool IsDeleted { get; set; }
-    }
+    T Id { get; set; }
+    DateTime CreatedAt { get; set; }
+    DateTime? UpdatedAt { get; set; }
+    bool IsDeleted { get; set; }
 }

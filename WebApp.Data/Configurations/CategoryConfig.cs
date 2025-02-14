@@ -2,20 +2,19 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebApp.Core.Models;
 
-namespace WebApp.Data.Configurations
-{
-    public class CategoryConfig : IEntityTypeConfiguration<Category>
-    {
-        public void Configure(EntityTypeBuilder<Category> entity)
-        {
-            entity.Property(p => p.Name).IsRequired().HasMaxLength(50);
-            entity.Property(p => p.Description).HasMaxLength(500);
+namespace WebApp.Data.Configurations;
 
-            // Relationships
-            entity.HasMany(p => p.Products)
-                  .WithOne(c => c.Category)
-                  .HasForeignKey(p => p.CategoryId)
-                  .OnDelete(DeleteBehavior.Restrict);
-        }
+public class CategoryConfig : IEntityTypeConfiguration<Category>
+{
+    public void Configure(EntityTypeBuilder<Category> entity)
+    {
+        entity.Property(p => p.Name).IsRequired().HasMaxLength(50);
+        entity.Property(p => p.Description).HasMaxLength(500);
+
+        // Relationships
+        entity.HasMany(p => p.Products)
+            .WithOne(c => c.Category)
+            .HasForeignKey(p => p.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

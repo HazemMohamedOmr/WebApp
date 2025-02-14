@@ -1,6 +1,5 @@
-﻿namespace WebApp.Core.Services
+﻿namespace WebApp.Core.Services;
+
+internal interface IProductService
 {
-    internal interface IProductService
-    {
-    }
 }

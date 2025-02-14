@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WebApp.Core\WebApp.Core.csproj" />
-    <ProjectReference Include="..\WebApp.Data\WebApp.Data.csproj" />
-    <ProjectReference Include="..\WebApp.Infrastructure\WebApp.Infrastructure.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\WebApp.Core\WebApp.Core.csproj"/>
+        <ProjectReference Include="..\WebApp.Data\WebApp.Data.csproj"/>
+        <ProjectReference Include="..\WebApp.Infrastructure\WebApp.Infrastructure.csproj"/>
+    </ItemGroup>
 
 </Project>

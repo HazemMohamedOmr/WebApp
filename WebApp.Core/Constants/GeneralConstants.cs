@@ -1,11 +1,10 @@
-﻿namespace WebApp.Core.Constants
+﻿namespace WebApp.Core.Constants;
+
+public static class GeneralConstants
 {
-    public static class GeneralConstants
+    public static class OrderBy
     {
-        public static class OrderBy
-        {
-            public const string Ascending = "ASC";
-            public const string Descending = "DESC";
-        }
+        public const string Ascending = "ASC";
+        public const string Descending = "DESC";
     }
 }
