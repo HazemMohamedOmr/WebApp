@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using WebApp.Core.Constants;
 
 namespace WebApp.Core.Repositories;
@@ -30,8 +31,9 @@ public interface IRepository<T> where T : class
     Task<bool> AllAsync(Expression<Func<T, bool>> predicate);
 
     // Create / Update / Delete
-    Task AddAsync(T entity);
-    Task AddRangeAsync(IEnumerable<T> entities);
+    Task<EntityEntry<T>> AddAsync(T entity);
+    IEnumerable<T> AddRange(IEnumerable<T> entities);
+    Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities);
     T Update(T entity);
     IEnumerable<T> UpdateRange(IEnumerable<T> entities);
     void Delete(T entity);

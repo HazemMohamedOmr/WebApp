@@ -9,7 +9,7 @@ public class SupplierConfig : IEntityTypeConfiguration<Supplier>
     public void Configure(EntityTypeBuilder<Supplier> entity)
     {
         entity.Property(p => p.CompanyName).IsRequired().HasMaxLength(100);
-        entity.Property(p => p.ContactInfo).HasMaxLength(500);
+        entity.Property(p => p.ContactInfo).IsRequired(false).HasMaxLength(500);
 
         // Relationships
         entity.HasMany(p => p.Products)

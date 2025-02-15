@@ -23,6 +23,9 @@ public static class ServiceExtensions
         // Register Services here
         services.AddScoped<IJWTService, JWTService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ISupplierService, SupplierService>();
     }
 
     // Register UnitOfWork

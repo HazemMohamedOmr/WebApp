@@ -6,6 +6,7 @@ public interface IUnitOfWork : IDisposable
 {
     IProductRepository Product { get; }
     IRepository<Category> Category { get; }
+    IRepository<Supplier> Supplier { get; }
     Task<int> SaveAsync();
 
     // Transactions

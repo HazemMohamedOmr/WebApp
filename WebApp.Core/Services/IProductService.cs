@@ -1,14 +1,14 @@
 ﻿using WebApp.Core.DTOs;
+using WebApp.Core.Interfaces;
 using WebApp.Core.Models;
 
 namespace WebApp.Core.Services;
 
-internal interface IProductService
+public interface IProductService
 {
-    Task<IEnumerable<Product>> GetAllAsync();
-    Task<Product> GetByIdAsync(int id);
-    Task<Product> AddAsync(ProductDTO productDto);
-    Task<Product> UpdateAsync(int id, ProductDTO productDto);
-    Task<bool> DeleteAsync(int id);
-    
+    Task<IServiceResponse<IEnumerable<Product>>> GetAllAsync();
+    Task<IServiceResponse<Product>> GetByIdAsync(int id);
+    Task<IServiceResponse<Product>> AddAsync(ProductDTO productDTO);
+    Task<IServiceResponse<Product>> UpdateAsync(int id, ProductDTO productDTO);
+    Task<IServiceResponse<bool>> DeleteAsync(int id);
 }

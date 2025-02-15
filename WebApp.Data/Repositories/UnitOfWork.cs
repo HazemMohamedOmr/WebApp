@@ -9,6 +9,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
 {
     private readonly ApplicationDbContext _context;
     private IRepository<Category> _category;
+    private IRepository<Supplier> _supplier;
 
     private IProductRepository _product;
     private IDbContextTransaction _transaction;
@@ -19,8 +20,8 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     }
 
     public IProductRepository Product => _product ??= new ProductRepository(_context);
-
     public IRepository<Category> Category => _category ??= new Repository<Category>(_context);
+    public IRepository<Supplier> Supplier => _supplier ??= new Repository<Supplier>(_context);
 
     public async Task<int> SaveAsync()
     {

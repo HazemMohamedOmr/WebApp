@@ -9,7 +9,7 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
     public void Configure(EntityTypeBuilder<Product> entity)
     {
         entity.Property(p => p.Name).IsRequired().HasMaxLength(100);
-        entity.Property(p => p.Description).HasMaxLength(500);
+        entity.Property(p => p.Description).IsRequired(false).HasMaxLength(500);
         entity.Property(p => p.Price).IsRequired().HasColumnType("decimal(18,2)");
 
         // Relationships

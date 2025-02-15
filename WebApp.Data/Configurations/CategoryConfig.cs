@@ -9,7 +9,7 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
     public void Configure(EntityTypeBuilder<Category> entity)
     {
         entity.Property(p => p.Name).IsRequired().HasMaxLength(50);
-        entity.Property(p => p.Description).HasMaxLength(500);
+        entity.Property(p => p.Description).IsRequired(false).HasMaxLength(500);
 
         // Relationships
         entity.HasMany(p => p.Products)

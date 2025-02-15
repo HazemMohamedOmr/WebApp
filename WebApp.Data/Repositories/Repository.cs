@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using WebApp.Core.Constants;
 using WebApp.Core.Repositories;
 using WebApp.Data.Data;
@@ -124,14 +125,21 @@ public class Repository<T> : IRepository<T> where T : class
 
     // ---------------------- CUD OPERATIONS ----------------------
 
-    public async Task AddAsync(T entity)
+    public async Task<EntityEntry<T>> AddAsync(T entity)
     {
-        await _dbSet.AddAsync(entity);
+        return await _dbSet.AddAsync(entity);
     }
 
-    public async Task AddRangeAsync(IEnumerable<T> entities)
+    public IEnumerable<T> AddRange(IEnumerable<T> entities)
+    {
+        _dbSet.AddRange(entities);
+        return entities;
+    }
+
+    public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities)
     {
         await _dbSet.AddRangeAsync(entities);
+        return entities;
     }
 
     public T Update(T entity)

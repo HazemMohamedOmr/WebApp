@@ -5,9 +5,11 @@ namespace WebApp.Core.DTOs;
 
 public class AuthDTO
 {
-    [JsonIgnore] public IEnumerable Errors { get; set; }
+    [JsonIgnore]
+    public IEnumerable Errors { get; set; }
 
-    [JsonIgnore] public string Message { get; set; }
+    [JsonIgnore]
+    public string Message { get; set; }
 
     public bool IsAuthenticated { get; set; }
     public string FirstName { get; set; }
