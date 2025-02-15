@@ -21,8 +21,8 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var products = await _productService.GetAllAsync();
-        return Ok(products.Data);
+        var result = await _productService.GetAllAsync();
+        return Ok(result.Data);
     }
 
     [HttpGet("{id}")]

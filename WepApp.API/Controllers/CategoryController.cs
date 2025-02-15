@@ -3,6 +3,7 @@ using WebApp.Core.DTOs;
 using WebApp.Core.Models;
 using WebApp.Core.Repositories;
 using WebApp.Core.Services;
+using WebApp.Infrastructure.Exceptions;
 
 namespace WebApp.API.Controllers;
 
@@ -20,16 +21,19 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _categoryService.GetAllAsync());
+        var result = await _categoryService.GetAllAsync();
+        return Ok(result.Data);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var category = await _categoryService.GetByIdAsync(id);
-        if (category is null)
-            return NotFound();
-        return Ok(category);
+        var result = await _categoryService.GetByIdAsync(id);
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+
+        return Ok(result.Data);
     }
 
     [HttpPost]
@@ -40,10 +44,10 @@ public class CategoryController : ControllerBase
 
         var result = await _categoryService.AddAsync(categoryDto);
 
-        if (result is null)
-            return BadRequest();
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
 
-        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        return CreatedAtAction(nameof(GetById), new { id = result.Data.Id }, result.Data);
     }
 
     [HttpPut]
@@ -54,18 +58,20 @@ public class CategoryController : ControllerBase
 
         var result = await _categoryService.UpdateAsync(id, categoryDto);
 
-        if (result is null)
-            return NotFound();
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
 
-        return Ok(result);
+        return Ok(result.Data);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         var result = await _categoryService.DeleteAsync(id);
-        if (result is false)
-            return NotFound();
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+
         return NoContent();
     }
 }

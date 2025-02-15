@@ -26,7 +26,7 @@ public class ProductService : IProductService
     public async Task<IServiceResponse<Product>> GetByIdAsync(int id)
     {
         var product = await _unitOfWork.Product.GetByIdAsync(id);
-        if (product == null)
+        if (product is null)
             return ServiceResponse<Product>.Fail("Product not Found", StatusCodes.Status404NotFound);
         return ServiceResponse<Product>.Success(product);
     }

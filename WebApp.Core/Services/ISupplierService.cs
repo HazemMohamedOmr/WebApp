@@ -1,13 +1,14 @@
 ﻿using WebApp.Core.DTOs;
+using WebApp.Core.Interfaces;
 using WebApp.Core.Models;
 
 namespace WebApp.Core.Services;
 
 public interface ISupplierService
 {
-    Task<IEnumerable<Supplier>> GetAllAsync();
-    Task<Supplier> GetByIdAsync(int id);
-    Task<Supplier> AddAsync(SupplierDTO supplierDto);
-    Task<Supplier> UpdateAsync(int id, SupplierDTO supplierDto);
-    Task<bool> DeleteAsync(int id);
+    Task<IServiceResponse<IEnumerable<Supplier>>> GetAllAsync();
+    Task<IServiceResponse<Supplier>> GetByIdAsync(int id);
+    Task<IServiceResponse<Supplier>> AddAsync(SupplierDTO supplierDto);
+    Task<IServiceResponse<Supplier>> UpdateAsync(int id, SupplierDTO supplierDto);
+    Task<IServiceResponse<bool>> DeleteAsync(int id);
 }

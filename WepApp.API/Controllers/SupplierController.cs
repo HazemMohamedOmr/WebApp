@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Core.DTOs;
 using WebApp.Core.Services;
+using WebApp.Infrastructure.Exceptions;
 using WebApp.Service;
 
 namespace WebApp.API.Controllers
@@ -20,16 +22,18 @@ namespace WebApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _supplierService.GetAllAsync());
+            var result = await _supplierService.GetAllAsync();
+            return Ok(result.Data);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var supplier = await _supplierService.GetByIdAsync(id);
-            if (supplier is null)
-                return NotFound();
-            return Ok(supplier);
+            var result = await _supplierService.GetByIdAsync(id);
+
+            if (result.IsSuccess is false)
+                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+            return Ok(result.Data);
         }
 
         [HttpPost]
@@ -40,10 +44,10 @@ namespace WebApp.API.Controllers
 
             var result = await _supplierService.AddAsync(supplierDTO);
 
-            if (result is null)
-                return BadRequest();
+            if (result.IsSuccess is false)
+                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data.Id }, result.Data);
         }
 
         [HttpPut]
@@ -54,18 +58,20 @@ namespace WebApp.API.Controllers
 
             var result = await _supplierService.UpdateAsync(id, supplierDTO);
 
-            if (result is null)
-                return NotFound();
+            if (result.IsSuccess is false)
+                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
 
-            return Ok(result);
+            return Ok(result.Data);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _supplierService.DeleteAsync(id);
-            if (result is false)
-                return NotFound();
+
+            if (result.IsSuccess is false)
+                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+
             return NoContent();
         }
     }
