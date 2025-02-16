@@ -1,10 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using WebApp.Core.DTOs;
+using WebApp.Core.Interfaces;
 using WebApp.Core.Models;
 using WebApp.Core.Repositories;
 using WebApp.Core.Services;
 using WebApp.Infrastructure.Authentication;
+using WebApp.Infrastructure.Exceptions;
 
 namespace WebApp.Service;
 
@@ -24,17 +27,17 @@ public class AuthService : IAuthService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<AuthDTO> LoginAsync(LoginRequestDTO model)
+    public async Task<IServiceResponse<AuthDTO>> LoginAsync(LoginRequestDTO model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
 
         if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
-            return new AuthDTO { Message = "Email or Password is incorrect!" };
+            return ServiceResponse<AuthDTO>.Fail("Email or Password is incorrect!", StatusCodes.Status400BadRequest);
 
         var jwtSecurityToken = await CreateJwtToken(user);
         var rolesList = await _userManager.GetRolesAsync(user);
 
-        return new AuthDTO
+        var authDto = new AuthDTO
         {
             IsAuthenticated = true,
             Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
@@ -44,12 +47,14 @@ public class AuthService : IAuthService
             ExpiresOn = jwtSecurityToken.ValidTo,
             Roles = [.. rolesList]
         };
+
+        return ServiceResponse<AuthDTO>.Success(authDto);
     }
 
-    public async Task<AuthDTO> RegisterAsync(RegisterRequestDTO model)
+    public async Task<IServiceResponse<AuthDTO>> RegisterAsync(RegisterRequestDTO model)
     {
         if (await _userManager.FindByEmailAsync(model.Email) is not null)
-            return new AuthDTO { Message = "Email is already registered!" };
+            return ServiceResponse<AuthDTO>.Fail("Email is already registered!", StatusCodes.Status400BadRequest);
 
         var user = new ApplicationUser
         {
@@ -66,11 +71,7 @@ public class AuthService : IAuthService
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
-                return new AuthDTO
-                {
-                    Errors = result.Errors,
-                    Message = "Failed to register!"
-                };
+                return ServiceResponse<AuthDTO>.Fail("Failed to register!", StatusCodes.Status400BadRequest, result.Errors);
 
             await _userManager.AddToRoleAsync(user, model.Role);
             await _unitOfWork.CommitTransactionAsync();
@@ -78,15 +79,12 @@ public class AuthService : IAuthService
         catch (Exception ex)
         {
             await _unitOfWork.RollbackTransactionAsync();
-            return new AuthDTO
-            {
-                Message = ex.Message
-            };
+            return ServiceResponse<AuthDTO>.Fail(ex.Message);
         }
 
         var jwtSecurityToken = await CreateJwtToken(user);
 
-        return new AuthDTO
+        var authDto = new AuthDTO
         {
             Email = user.Email,
             ExpiresOn = jwtSecurityToken.ValidTo,
@@ -96,6 +94,8 @@ public class AuthService : IAuthService
             FirstName = user.FirstName,
             LastName = user.LastName
         };
+
+        return ServiceResponse<AuthDTO>.Success(authDto);
     }
 
     //public async Task<string> AddRoleAsync(AddRoleModel model)

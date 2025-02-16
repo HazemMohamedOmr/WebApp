@@ -21,7 +21,6 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = RoleConstants.Customer)]
     public async Task<IActionResult> GetAll()
     {
         var result = await _categoryService.GetAllAsync();
@@ -34,7 +33,7 @@ public class CategoryController : ControllerBase
         var result = await _categoryService.GetByIdAsync(id);
 
         if (result.IsSuccess is false)
-            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
         return Ok(result.Data);
     }
@@ -48,7 +47,7 @@ public class CategoryController : ControllerBase
         var result = await _categoryService.AddAsync(categoryDto);
 
         if (result.IsSuccess is false)
-            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
         return CreatedAtAction(nameof(GetById), new { id = result.Data.Id }, result.Data);
     }
@@ -62,7 +61,7 @@ public class CategoryController : ControllerBase
         var result = await _categoryService.UpdateAsync(id, categoryDto);
 
         if (result.IsSuccess is false)
-            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
         return Ok(result.Data);
     }
@@ -73,7 +72,7 @@ public class CategoryController : ControllerBase
         var result = await _categoryService.DeleteAsync(id);
 
         if (result.IsSuccess is false)
-            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
         return NoContent();
     }

@@ -13,7 +13,7 @@ namespace WebApp.Infrastructure.Exceptions
         public bool IsSuccess { get; set; }
         public string? Message { get; set; }
         public int StatusCode { get; set; }
-        public List<string>? Errors { get; set; }
+        public IEnumerable<Object>? Errors { get; set; }
 
         public static ServiceResponse<T> Success(T data, string message = "", int statusCode = 200)
         {
@@ -26,7 +26,7 @@ namespace WebApp.Infrastructure.Exceptions
             };
         }
 
-        public static ServiceResponse<T> Fail(string message, int statusCode = 400, List<string>? errors = null)
+        public static ServiceResponse<T> Fail(string message, int statusCode = 400, IEnumerable<Object>? errors = null)
         {
             return new ServiceResponse<T>
             {

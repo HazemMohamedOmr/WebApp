@@ -31,7 +31,7 @@ public class ProductsController : ControllerBase
         var result = await _productService.GetByIdAsync(id);
 
         if (result.IsSuccess is false)
-            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
         return Ok(result.Data);
     }
@@ -45,7 +45,7 @@ public class ProductsController : ControllerBase
         var result = await _productService.AddAsync(productDTO);
 
         if (result.IsSuccess is false)
-            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
         return CreatedAtAction(nameof(GetById), new { id = result.Data.Id }, result.Data);
     }
@@ -59,7 +59,7 @@ public class ProductsController : ControllerBase
         var result = await _productService.UpdateAsync(id, productDTO);
 
         if (result.IsSuccess is false)
-            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
         return Ok(result.Data);
     }
@@ -70,7 +70,7 @@ public class ProductsController : ControllerBase
         var result = await _productService.DeleteAsync(id);
 
         if (result.IsSuccess is false)
-            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
         return NoContent();
     }

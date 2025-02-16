@@ -32,7 +32,7 @@ namespace WebApp.API.Controllers
             var result = await _supplierService.GetByIdAsync(id);
 
             if (result.IsSuccess is false)
-                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
             return Ok(result.Data);
         }
 
@@ -45,7 +45,7 @@ namespace WebApp.API.Controllers
             var result = await _supplierService.AddAsync(supplierDTO);
 
             if (result.IsSuccess is false)
-                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
             return CreatedAtAction(nameof(GetById), new { id = result.Data.Id }, result.Data);
         }
@@ -59,7 +59,7 @@ namespace WebApp.API.Controllers
             var result = await _supplierService.UpdateAsync(id, supplierDTO);
 
             if (result.IsSuccess is false)
-                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
             return Ok(result.Data);
         }
@@ -70,7 +70,7 @@ namespace WebApp.API.Controllers
             var result = await _supplierService.DeleteAsync(id);
 
             if (result.IsSuccess is false)
-                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.Message));
+                return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
             return NoContent();
         }

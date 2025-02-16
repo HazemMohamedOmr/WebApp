@@ -24,10 +24,10 @@ public class AuthController : ControllerBase
 
         var result = await _authService.LoginAsync(model);
 
-        if (result.IsAuthenticated) return Ok(result);
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
 
-        var problemDetails = ProblemFactory.CreateProblemDetails(HttpContext, result.Message);
-        return BadRequest(problemDetails);
+        return Ok(result.Data);
     }
 
     [HttpPost("register")]
@@ -38,12 +38,9 @@ public class AuthController : ControllerBase
 
         var result = await _authService.RegisterAsync(model);
 
-        if (!result.IsAuthenticated)
-        {
-            var problemDetails = ProblemFactory.CreateProblemDetails(HttpContext, result.Message, result.Errors);
-            return BadRequest(problemDetails);
-        }
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message, result.Errors));
 
-        return Ok(result);
+        return Ok(result.Data);
     }
 }

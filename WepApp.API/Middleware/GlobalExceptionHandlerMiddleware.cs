@@ -24,7 +24,7 @@ public class GlobalExceptionHandlerMiddleware
             _logger.LogError(ex, "Unhandled Exception");
 
             var problemDetails = ProblemFactory.CreateProblemDetails(
-                context, "An error occurred", ex.Message);
+                context, StatusCodes.Status500InternalServerError, ex.Message);
 
             context.Response.StatusCode = problemDetails.Status.Value;
             context.Response.ContentType = "application/json";
