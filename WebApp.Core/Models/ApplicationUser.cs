@@ -3,7 +3,7 @@ using WebApp.Core.Interfaces;
 
 namespace WebApp.Core.Models;
 
-public class ApplicationUser : IdentityUser, IBaseEntity<string>
+public class ApplicationUser : IdentityUser, IBaseEntity<string>, ISoftDeletable
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

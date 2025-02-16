@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using WebApp.Core.Constants;
 using WebApp.Core.DTOs;
 using WebApp.Core.Models;
 using WebApp.Core.Repositories;
@@ -19,6 +21,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = RoleConstants.Customer)]
     public async Task<IActionResult> GetAll()
     {
         var result = await _categoryService.GetAllAsync();

@@ -2,12 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using WebApp.Core.Constants;
+using WebApp.Core.Interfaces;
+using WebApp.Core.Models;
 using WebApp.Core.Repositories;
 using WebApp.Data.Data;
 
 namespace WebApp.Data.Repositories;
 
-public class Repository<T> : IRepository<T> where T : class
+public class Repository<T, TId> : IRepository<T, TId> where T : BaseEntity<TId>
 {
     private readonly ApplicationDbContext _context;
     private readonly DbSet<T> _dbSet;
@@ -19,7 +21,7 @@ public class Repository<T> : IRepository<T> where T : class
     }
     // ---------------------- READ OPERATIONS (NO TRACKING) ----------------------
 
-    public async Task<T> GetByIdAsync<TId>(TId id)
+    public async Task<T> GetByIdAsync(TId id)
     {
         return await _dbSet.FindAsync(id);
     }
@@ -144,24 +146,48 @@ public class Repository<T> : IRepository<T> where T : class
 
     public T Update(T entity)
     {
+        entity.UpdatedAt = DateTime.UtcNow;
         _dbSet.Update(entity);
         return entity;
     }
 
     public IEnumerable<T> UpdateRange(IEnumerable<T> entities)
     {
+        foreach (var entity in entities)
+        {
+            entity.UpdatedAt = DateTime.UtcNow;
+        }
         _dbSet.UpdateRange(entities);
         return entities;
     }
 
     public void Delete(T entity)
     {
-        _dbSet.Remove(entity);
+        if (entity is ISoftDeletable softDeletableEntity)
+        {
+            softDeletableEntity.IsDeleted = true;
+            entity.UpdatedAt = DateTime.UtcNow;
+        }
+        else
+        {
+            _dbSet.Remove(entity); // Hard delete if not soft-deletable
+        }
     }
 
     public void DeleteRange(IEnumerable<T> entities)
     {
-        _dbSet.RemoveRange(entities);
+        foreach (var entity in entities)
+        {
+            if (entity is ISoftDeletable softDeletableEntity)
+            {
+                softDeletableEntity.IsDeleted = true;
+                entity.UpdatedAt = DateTime.UtcNow;
+            }
+            else
+            {
+                _dbSet.Remove(entity); // Hard delete if not soft-deletable
+            }
+        }
     }
 
     // ---------------------- PROJECTION ----------------------

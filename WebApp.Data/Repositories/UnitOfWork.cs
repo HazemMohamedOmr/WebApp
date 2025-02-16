@@ -8,8 +8,8 @@ namespace WebApp.Data.Repositories;
 public class UnitOfWork : IUnitOfWork, IDisposable
 {
     private readonly ApplicationDbContext _context;
-    private IRepository<Category> _category;
-    private IRepository<Supplier> _supplier;
+    private IRepository<Category, int> _category;
+    private IRepository<Supplier, int> _supplier;
 
     private IProductRepository _product;
     private IDbContextTransaction _transaction;
@@ -20,8 +20,8 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     }
 
     public IProductRepository Product => _product ??= new ProductRepository(_context);
-    public IRepository<Category> Category => _category ??= new Repository<Category>(_context);
-    public IRepository<Supplier> Supplier => _supplier ??= new Repository<Supplier>(_context);
+    public IRepository<Category, int> Category => _category ??= new Repository<Category, int>(_context);
+    public IRepository<Supplier, int> Supplier => _supplier ??= new Repository<Supplier, int>(_context);
 
     public async Task<int> SaveAsync()
     {

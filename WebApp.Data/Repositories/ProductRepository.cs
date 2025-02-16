@@ -4,7 +4,7 @@ using WebApp.Data.Data;
 
 namespace WebApp.Data.Repositories;
 
-public class ProductRepository : Repository<Product>, IProductRepository
+public class ProductRepository : Repository<Product, int>, IProductRepository
 {
     private readonly ApplicationDbContext _context;
 

@@ -1,13 +1,14 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using WebApp.Core.Constants;
+using WebApp.Core.Models;
 
 namespace WebApp.Core.Repositories;
 
-public interface IRepository<T> where T : class
+public interface IRepository<T, TId> where T : BaseEntity<TId>
 {
     // Query
-    Task<T> GetByIdAsync<TId>(TId id);
+    Task<T> GetByIdAsync(TId id);
     Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes);
 
     Task<(IEnumerable<T> Items, int TotalCount)> GetAllPagedAsync(int pageNumber, int pageSize,

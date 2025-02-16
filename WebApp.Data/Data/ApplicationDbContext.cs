@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System.Reflection.Emit;
+using System.Xml;
+using WebApp.Core.Interfaces;
 using WebApp.Core.Models;
 using WebApp.Data.Configurations;
 
@@ -24,6 +28,23 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        // Apply SoftDelete Filtering
+
+        foreach (var entityType in builder.Model.GetEntityTypes())
+        {
+            var entityClrType = entityType.ClrType;
+
+            if (typeof(ISoftDeletable).IsAssignableFrom(entityClrType))
+            {
+                var parameter = Expression.Parameter(entityClrType, "e");
+                var property = Expression.Property(parameter, nameof(ISoftDeletable.IsDeleted));
+                var condition = Expression.Equal(property, Expression.Constant(false));
+                var lambda = Expression.Lambda(condition, parameter);
+
+                builder.Entity(entityClrType).HasQueryFilter(lambda);
+            }
+        }
 
         // Add Configuartion For Each Table
 

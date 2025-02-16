@@ -2,7 +2,7 @@
 
 namespace WebApp.Core.Models;
 
-public abstract class BaseEntity<T> : IBaseEntity<T>
+public abstract class BaseEntity<T> : IBaseEntity<T>, ISoftDeletable
 {
     public T Id { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

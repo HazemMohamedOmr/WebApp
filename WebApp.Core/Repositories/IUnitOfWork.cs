@@ -5,8 +5,8 @@ namespace WebApp.Core.Repositories;
 public interface IUnitOfWork : IDisposable
 {
     IProductRepository Product { get; }
-    IRepository<Category> Category { get; }
-    IRepository<Supplier> Supplier { get; }
+    IRepository<Category, int> Category { get; }
+    IRepository<Supplier, int> Supplier { get; }
     Task<int> SaveAsync();
 
     // Transactions
