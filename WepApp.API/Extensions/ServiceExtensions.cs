@@ -11,6 +11,7 @@ using WebApp.Data.Data;
 using WebApp.Data.Repositories;
 using WebApp.Infrastructure.Authentication;
 using WebApp.Infrastructure.Helpers;
+using WebApp.Infrastructure.Mail;
 using WebApp.Service;
 
 namespace WebApp.API.Extensions;
@@ -117,6 +118,16 @@ public static class ServiceExtensions
                 };
             });
     }
+
+    public static void ConfigureMail(this IServiceCollection services, IConfiguration Configuration)
+    {
+        // Map MailSettings Helper Class to MailSettings in appsettings
+        services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+
+        // Registering EmailService Service
+        services.AddTransient<IEmailService, EmailService>();
+    }
+
     //public static void ConfigureJWTRefreshToken(this IServiceCollection services)
     //{
     //}

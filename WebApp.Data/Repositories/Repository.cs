@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using WebApp.Core.Constants;
@@ -62,9 +63,9 @@ public class Repository<T, TId> : IRepository<T, TId> where T : BaseEntity<TId>
     }
 
     public async Task<IEnumerable<T>> GetAllSortedAsync<TKey>(Expression<Func<T, TKey>> orderBy,
-        string orderByDirection = GeneralConstants.OrderBy.Ascending)
+        string orderByDirection = GeneralConstants.OrderBy.Ascending, params Expression<Func<T, object>>[] includes)
     {
-        var query = _dbSet.AsNoTracking();
+        var query = ApplyIncludes(_dbSet.AsNoTracking(), includes);
         return orderByDirection == GeneralConstants.OrderBy.Ascending
             ? await query.OrderBy(orderBy).ToListAsync()
             : await query.OrderByDescending(orderBy).ToListAsync();

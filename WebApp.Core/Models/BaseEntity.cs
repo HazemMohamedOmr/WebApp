@@ -1,4 +1,5 @@
-﻿using WebApp.Core.Interfaces;
+﻿using System.Text.Json.Serialization;
+using WebApp.Core.Interfaces;
 
 namespace WebApp.Core.Models;
 

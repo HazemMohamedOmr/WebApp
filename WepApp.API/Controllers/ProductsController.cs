@@ -74,4 +74,125 @@ public class ProductsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("GetProductData/{id}", Name = "GetProductData")]
+    public async Task<IActionResult> GetProduct(int id)
+    {
+        var result = await _productService.GetProductData(id);
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("GetAllPaged")]
+    public async Task<IActionResult> GetAllPaged(int pageNumber, int pageSize)
+    {
+        var result = await _productService.GetProductsWithPages(pageNumber, pageSize);
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("GetProductsFilterd")]
+    public async Task<IActionResult> GetProductsFilterd()
+    {
+        var result = await _productService.GetProductsFilterd();
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("GetProductsFilteredPaged")]
+    public async Task<IActionResult> GetProductsFilteredPaged(int pageNumber, int pageSize)
+    {
+        var result = await _productService.GetProductsFilterdWithPages(pageNumber, pageSize);
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("GetAllProductsSorted")]
+    public async Task<IActionResult> GetAllProductsSorted()
+    {
+        var result = await _productService.GetAllProductsSorted();
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("GetProductsSortedAndFiltered")]
+    public async Task<IActionResult> GetProductsSortedAndFiltered()
+    {
+        var result = await _productService.GetProductsFilterdAndSorted();
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("Count")]
+    public async Task<IActionResult> Count()
+    {
+        var result = await _productService.GetProductsCounts();
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("Max")]
+    public async Task<IActionResult> Max()
+    {
+        var result = await _productService.GetProductsMax();
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("Min")]
+    public async Task<IActionResult> Min()
+    {
+        var result = await _productService.GetProductsMin();
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("Sum")]
+    public async Task<IActionResult> Sum()
+    {
+        var result = await _productService.GetProductsSum();
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("Average")]
+    public async Task<IActionResult> Average()
+    {
+        var result = await _productService.GetProductsAverage();
+
+        if (result.IsSuccess is false)
+            return StatusCode(result.StatusCode, ProblemFactory.CreateProblemDetails(HttpContext, result.StatusCode, result.Message));
+
+        return Ok(result.Data);
+    }
 }

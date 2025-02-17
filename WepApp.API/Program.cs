@@ -5,7 +5,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.ConfigureDataBaseConnection(builder.Configuration);
@@ -14,6 +17,7 @@ builder.Services.ConfigureUnitOfWork();
 builder.Services.ConfigureSwagger();
 builder.Services.ConfigureBusinessServices();
 builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.ConfigureMail(builder.Configuration);
 
 var app = builder.Build();
 

@@ -45,7 +45,7 @@ public interface IRepository<T, TId> where T : BaseEntity<TId>
 
     // Sorting
     Task<IEnumerable<T>> GetAllSortedAsync<TKey>(Expression<Func<T, TKey>> orderBy,
-        string orderByDirection = GeneralConstants.OrderBy.Ascending);
+        string orderByDirection = GeneralConstants.OrderBy.Ascending, params Expression<Func<T, object>>[] includes);
 
     Task<IEnumerable<T>> GetFilteredSortedAsync<TKey>(Expression<Func<T, bool>> predicate,
         Expression<Func<T, TKey>> orderBy, string orderByDirection = GeneralConstants.OrderBy.Ascending,
